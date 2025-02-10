@@ -1,6 +1,6 @@
 # Talos Linux on Proxmox
 
-A Terraform provider to install Talos Linux clusters on Proxmox and
+A Terraform module to install Talos Linux clusters on Proxmox and
 bootstrap Kubernetes and add/remove nodes and node pools over time.
 
 Features:
@@ -46,4 +46,4 @@ vars and setting up permissions for an SSH user on your Proxmox node(s):
    which lacked configurability and scalability IMO
  - This was also partially based off
    my [terraform-proxmox-k3s](https://github.com/jan-tee/terraform-proxmox-k3s)
-   k3s Terraform provider.
+   k3s Terraform module.
