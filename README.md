@@ -38,3 +38,12 @@ vars and setting up permissions for an SSH user on your Proxmox node(s):
    relevant nodes of your Proxmox (PVE) cluster.
 
 1. Make this SSH key available on the Terraform host via `ssh-agent` (`ssh-add ...`).
+
+# Credits & Contributors
+
+ - This was inspired by Olav's article [Talos cluster on Proxmox with
+   Terraform](https://olav.ninja/talos-cluster-on-proxmox-with-terraform),
+   which lacked configurability and scalability IMO
+ - This was also partially based off
+   my [terraform-proxmox-k3s](https://github.com/jan-tee/terraform-proxmox-k3s)
+   k3s Terraform provider.
