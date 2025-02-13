@@ -8,6 +8,8 @@ Features:
  - supports control plane redundancy - 1, 3, 5 nodes.
  - allows multiple node pools to be defined
  - supports multi-node Proxmox clusters
+ - supports VLAN tagging
+ - supports customizing node specs per pool (including control plane)
  - checks for existence of the control plane DNS record, and that it maps to
    all control plane endpoints
 
@@ -38,6 +40,9 @@ vars and setting up permissions for an SSH user on your Proxmox node(s):
    relevant nodes of your Proxmox (PVE) cluster.
 
 1. Make this SSH key available on the Terraform host via `ssh-agent` (`ssh-add ...`).
+
+1. Don't forget to set `DNS A` records in your DNS to point to all control plane nodes
+   for the cluster endpoint.
 
 # Credits & Contributors
 
