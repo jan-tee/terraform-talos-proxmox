@@ -11,5 +11,5 @@ resource "talos_machine_configuration_apply" "worker" {
     client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
     machine_configuration_input = data.talos_machine_configuration.worker.machine_configuration
     node                        = each.value.ip
-#   config_patches              = local.worker_config_patches_yaml
+    config_patches              = local.worker_config_patches_yaml
 }

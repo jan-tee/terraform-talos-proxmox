@@ -17,7 +17,7 @@ data "talos_machine_configuration" "control_plane" {
     cluster_endpoint = "https://${var.cluster.endpoint.dns}:6443"
     machine_type     = "controlplane"
     machine_secrets  = talos_machine_secrets.machine_secrets.machine_secrets
-#    config_patches   = local.control_plane_config_patches_yaml
+    config_patches   = local.control_plane_config_patches_yaml
 }
 
 # apply machine config to every control plane node
@@ -27,7 +27,7 @@ resource "talos_machine_configuration_apply" "control_plane" {
     client_configuration        = talos_machine_secrets.machine_secrets.client_configuration
     machine_configuration_input = data.talos_machine_configuration.control_plane[each.key].machine_configuration
     node                        = each.value.ip
-#    config_patches              = local.control_plane_config_patches_yaml
+    config_patches              = local.control_plane_config_patches_yaml
 }
 
 # bootstrapping is a one-time, single-node only operation on a control plane node.

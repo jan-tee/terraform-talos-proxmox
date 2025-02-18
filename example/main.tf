@@ -1,5 +1,6 @@
 module "talos-proxmox" {
-  source = "../"
+  # source = "github.com/jan-tee/terraform-talos-proxmox"
+  source = "../terraform-talos-proxmox"
 
   proxmox = {
     endpoint = var.pm_api_url
@@ -12,8 +13,46 @@ module "talos-proxmox" {
     name = "lisa"
     endpoint = {
       dns = "lisa.k8s.lab"          # DNS name that resolves to the IPs of the control plane nodes
-      ip = "10.10.4.100"            # virtual IP for control plane (using built-in load balancer in Talos)
-    }
+#      ip = "10.10.4.100"            # virtual IP for control plane (using built-in load balancer in Talos)
+    },
+    talos = {
+      control_plane_config_patches = {
+        machine = {
+          features = {
+            kubePrism = {
+              enabled = true,
+              port = 7445
+            }
+          },
+          logging = {
+            destinations = [
+              {
+                endpoint = "udp://log-source.simpson.lab:5142",
+                format = "json_lines"
+              }
+            ]
+          },
+        }
+      },
+    worker_config_patches = {
+      machine = {
+        features = {
+          kubePrism = {
+            enabled = true,
+            port = 7445
+            }
+          },
+          logging = {
+            destinations = [
+              {
+                endpoint = "udp://log-source.simpson.lab:5142",
+                format = "json_lines"
+              }
+            ]
+          },
+        }
+      }
+    },
     defaults = {
       node = "laszlo"               # PVE node to deploy on
       cpu_cores = 4                 # default number of CPU cores
@@ -30,21 +69,40 @@ module "talos-proxmox" {
 
   node_pools = [
     {
-      name = "cp"                   # prefix for these nodes
+      name = "laszlo-cp"            # prefix for these nodes
+      node = "laszlo"               # PVE node to deploy on
       type = "control"              # 'control' for control plane nodes, 'worker' (or do not specify) for workers
-      size = 3                      # count
+      size = 2                      # count
       disk_size = 20                # disk size in GB
       memory = 4096                 # memory size in MB
-      ip_offset = 256 * 4 + 1       # IP offset relative to subnet start
+      ip_offset = 256 * 4 + 1       # IP offset relative to subnet start (10.10.4.1-3)
     },
     {
-      name = "worker-l-afanas"      # a worker pool for 'L' sized workers
+      name = "afanas-cp"            # prefix for these nodes
+      node = "afanas"               # deploy these on afanas
+      type = "control"              # 'control' for control plane nodes, 'worker' (or do not specify) for workers
+      size = 1                      # count
+      disk_size = 20                # disk size in GB
+      memory = 4096                 # memory size in MB
+      ip_offset = 256 * 4 + 3       # IP offset relative to subnet start (10.10.4.4-5)
+    },
+    {
+      name = "afanas-l"      # a worker pool for 'L' sized workers
       cpu_cores = 6                 # CPU cores
       node = "afanas"               # on PVE cluster node 'afanas'
-      size = 10                     # 10 nodes total size of pool
+      size = 1                      # 1 nodes total size of pool
       memory = 8192                 # 8 GB memory
       disk_size = 20                # 20 GB disk
       ip_offset = 256 * 5 + 1       # 10.10.5.1-10
+    },
+    {
+      name = "laszlo-l"      # a worker pool for 'L' sized workers
+      cpu_cores = 6                 # CPU cores
+      node = "laszlo"               # on PVE cluster node 'afanas'
+      size =  1                     # 10 nodes total size of pool
+      memory = 8192                 # 8 GB memory
+      disk_size = 20                # 20 GB disk
+      ip_offset = 256 * 5 + 100     # 10.10.5.100-109
     }
   ]
 }

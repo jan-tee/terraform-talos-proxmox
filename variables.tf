@@ -3,7 +3,11 @@ variable "cluster" {
     name                      = string,
     endpoint                  = object({
       dns                     = string
-      ip                      = string
+      # ip                      = string  # later - will enable the built-in LB for control plane
+    }),
+    talos                     = object({
+      control_plane_config_patches = optional(any, {}),
+      worker_config_patches   = optional(any, {})
     }),
     defaults                  = object({
       node                    = string,
